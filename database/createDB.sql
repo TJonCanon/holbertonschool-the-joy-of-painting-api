@@ -1,24 +1,44 @@
--- Create Date Table
-CREATE TABLE Date (
-    date_id SERIAL PRIMARY KEY,
-    month VARCHAR(20),
-    year INT
-);
+--Create Database
+CREATE DATABASE IF NOT EXISTS JoyOfPainting;
+USE JoyOfPainting;
 
 -- Create Episode Table
-CREATE TABLE Episode (
-    episode_id SERIAL PRIMARY KEY,
-    title VARCHAR(255),
-    description TEXT,
-    duration INT,
-    original_air_date_id INT REFERENCES Date(date_id)
+CREATE TABLE IF NOT EXISTS Episodes (
+    episode_id INT PRIMARY KEY,
+    episode_num VARCHAR(50),
+    episode_title VARCHAR(255),
+    season INT,
+    episode INT,
+    aired INT,
 );
 
--- Create Painting Table
-CREATE TABLE Painting (
-    painting_id SERIAL PRIMARY KEY,
-    title VARCHAR(255),
-    subject_matter VARCHAR(255),
-    color_palette VARCHAR(255),
-    episode_id INT REFERENCES Episode(episode_id)
+
+-- Create Colors Table
+CREATE TABLE IF NOT EXISTS Colors (
+    color_id INT PRIMARY KEY,
+    color_name VARCHAR(255)
+);
+
+-- Creat EpiColors Table
+CREATE TABLE IF NOT EXISTS EpiColors (
+  episode_color_id INT AUTO_INCREMENT PRIMARY KEY,
+  episode_id INT,
+  color_id INT,
+  FOREIGN KEY (episode_id) REFERENCES Episodes(episode_id),
+  FOREIGN KEY (color_id) REFERENCES Colors(color_id)
+);
+
+-- Create Subject Table
+CREAT TABLE IF NOT EXISTS Subjects (
+    subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_name VARCHAR(255)
+);
+
+-- Create EpiSubject Table
+CREATE TABLE IF NOT EXISTS EpiSubject (
+    episode_subject_id INT PRIMARY KEY,
+    episode_id INT,
+    subject_id INT,
+    FOREIGN KEY (episode_id) REFERENCES episodes(episode_id),
+    FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id)
 );
