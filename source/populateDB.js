@@ -4,7 +4,7 @@ const papa = require("papaparse")
 const util = require("util");
 const dbConnect = require('./dbConnect');
 
-function populateDatabase() {
+function populateDB() {
   const colorData = fs.readFileSync(
     path.join(__dirname, "../datasets/Colors.csv"),
     "utf-8"
@@ -133,4 +133,4 @@ function populateDatabase() {
       );
   }
   
-module.exports = populateDatabase;
+module.exports = populateDB;
