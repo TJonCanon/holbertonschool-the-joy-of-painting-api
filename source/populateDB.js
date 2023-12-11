@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const papa = require("papaparse")
 const util = require("util");
-const createDBConnect = require('./dbConnect');
+const dbConnect = require('./dbConnect');
 
 function populateDatabase() {
   const colorData = fs.readFileSync(
@@ -14,7 +14,7 @@ function populateDatabase() {
     "utf-8"
   );
   const subjectData = fs.readFileSync(
-    path.join(__dirname, "../datasets/subjects.csv"),
+    path.join(__dirname, "../datasets/Subjects.csv"),
     "utf-8"
   );
 
@@ -40,7 +40,7 @@ function populateDatabase() {
       (header) => header !== "EPISODE" && header !=="TITLE"
     );
 
-    const db = createDBConnect();
+    const db = dbConnect();
 
     const query = util.promisify(db.query).bind(db);
 

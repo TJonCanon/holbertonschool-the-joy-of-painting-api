@@ -1,15 +1,20 @@
-const checkDB = require('./source/checkDB');
+const { checkDB, createDBConnectNoDB } = require("./source/checkDB");
+const fs = require("fs");
+const path = require("path");
+const populateDB = require("./source/populateDB");
+const dbConnect = require("./source/dbConnect");
+const express = require("express");
 
 checkDB()
     .then((exists) => {
         if(!exists) {
             const createDB = fs.readFileSync(
-                path.join(__dirname, './sql/createDB.sql'),
+                path.join(__dirname, './database/createDB.sql'),
                 'utf-8'
                 );
 
         // create connection
-        const db = createDBconnectNoDB();
+        const db = createDBConnectNoDB();
 
         // create database
         db.query(createDB, (error, results, fields) => {
@@ -23,36 +28,38 @@ checkDB()
             db.end();
         });
 
-        loadData();
+        populateDB();
         
         } else {
-            consle.log("Database exists")
+            console.log("Database exists")
         }
         })
         .then(() => {
             const app = express();
-            const port = 5000;
+            const port = 3000;
 
-            const connection = createDBConnect();
+            const connection = dbConnect();
 
             app.get("/api/episodes/search", async (req, res) => {
                 const { month, subject, color, matchType } = req.query;
 
                 let filters = [];
-                if (month) filters.push(`month = ${connection.esacpe(month)}`);
+                if (month) filters.push(`month = ${connection.escape(month)}`);
                 if (subject) filters.push(`s.subject_name = ${connection.escape(subject)}`);
                 if (color) filters.push(`c.color_name = ${connection.escape(color)}`);
 
+                const normalizedMatchType = matchType ? matchType.toUpperCase() : "ALL";
+
                 let filterString = filters.join(
-                    matchType.toUpperCase() === "ALL" ? " AND " : " OR "
+                normalizedMatchType.toUpperCase() === "ALL" ? " AND " : " OR "
                   );
 
                   let sql = `
                   SELECT e.episode_title
                   FROM Episodes e 
-                  LEFT JOIN Episode_Subject es ON e.episode_id = es.Episode_Id
+                  LEFT JOIN Episubject es ON e.episode_id = es.Episode_Id
                   LEFT JOIN Subjects s ON es.Subject_Id = s.Subject_Id
-                  LEFT JOIN Episode_Color ec ON e.episode_id = ec.Episode_Id
+                  LEFT JOIN EpiColors ec ON e.episode_id = ec.Episode_Id
                   LEFT JOIN Colors c ON ec.Color_Id = c.Color_Id
                 `;
                 if (filterString) sql += `WHERE ${filterString}`;

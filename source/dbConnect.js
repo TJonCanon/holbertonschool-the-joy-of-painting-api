@@ -1,10 +1,13 @@
 var mysql = require('mysql');
 
-function createDBConnect() {
+
+function dbConnect() {
     var connection = mysql.createConnection({
         host     : 'localhost',
         user     : 'root',
-        database : 'JoyOfPainting'
+        password : 'lets_paint',
+        database : 'JoyOfPainting',
+        multipleStatements: true
     });
     connection.connect((error) => {
         if (error) {
@@ -17,4 +20,4 @@ function createDBConnect() {
       return connection;
     }
     
-    module.exports = createDBConnection;
+    module.exports = dbConnect;

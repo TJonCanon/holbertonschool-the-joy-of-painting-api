@@ -4,7 +4,7 @@ function checkDB() {
     const db = createDBConnectNoDB();
 
     return new Promise((resolve, reject) => {
-        db.query("SHOW DATABASE LIKE 'JoyOfPainting'", (error, results, fields) => {
+        db.query("SHOW DATABASES LIKE 'JoyOfPainting'", (error, results, fields) => {
             if (error) reject(error);
 
             db.end();
@@ -18,7 +18,7 @@ function createDBConnectNoDB() {
     const connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'password_password',
+        password: 'lets_paint',
         multipleStatements: true
     });
 
