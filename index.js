@@ -9,8 +9,8 @@ checkDB()
     .then((exists) => {
         if(!exists) {
             const createDB = fs.readFileSync(
-                path.join(__dirname, './database/createDB.sql'),
-                'utf-8'
+                path.join(__dirname, "./database/createDB.sql"),
+                "utf-8"
                 );
 
         // create connection
